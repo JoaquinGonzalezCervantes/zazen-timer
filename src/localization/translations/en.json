@@ -1,0 +1,23 @@
+{
+  "app": {
+    "title": "Zazen Timer"
+  },
+  "buttons": {
+    "zazen": "Zazen",
+    "completeZazen": "Complete Zazen",
+    "start": "Start"
+  },
+  "periods": {
+    "preparation": "Preparation",
+    "zazen": "Zazen",
+    "kinhin": "Kinhin"
+  },
+  "time": {
+    "minutes": "minutes",
+    "seconds": "seconds"
+  },
+  "summary": {
+    "zazen30": "ZAZEN — 30 Minutes",
+    "kinhin5": "KINHIN — 5 Minutes"
+  }
+}
