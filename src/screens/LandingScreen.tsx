@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@navigation/types';
 import { useTranslation } from 'react-i18next';
-import Button from '@components/Button';
 import Card from '@components/Card';
 import { getSessionSummaryLines } from '../utils/session';
 import SessionImage from '@components/SessionImage';
@@ -21,12 +20,18 @@ export default function LandingScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.lg }] }>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={[styles.container, { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.lg }]}
+    >
       <Text style={styles.title}>{t('app.title')}</Text>
 
       <View style={styles.cards}>
         {/* Zazen session card */}
-        <Card style={[styles.card, styles.cardSpacing]}>
+        <Card
+          style={[styles.card, styles.cardSpacing]}
+          onPress={() => navigation.navigate('SessionSummary', { sessionType: 'zazen' })}
+        >
           <View style={styles.cardHeader}>
             <SessionImage sessionType="zazen" />
           </View>
@@ -35,15 +40,13 @@ export default function LandingScreen() {
               <Text key={`z-${idx}`} style={styles.detailText}>{line}</Text>
             ))}
           </View>
-          <Button
-            title={t('buttons.start')}
-            onPress={() => navigation.navigate('Timer', { sessionType: 'zazen' })}
-            style={styles.cardButton}
-          />
         </Card>
 
         {/* Complete session card */}
-        <Card style={styles.card}>
+        <Card
+          style={styles.card}
+          onPress={() => navigation.navigate('SessionSummary', { sessionType: 'complete' })}
+        >
           <View style={styles.cardHeader}>
             <SessionImage sessionType="complete" />
           </View>
@@ -52,14 +55,9 @@ export default function LandingScreen() {
               <Text key={`c-${idx}`} style={styles.detailText}>{line}</Text>
             ))}
           </View>
-          <Button
-            title={t('buttons.start')}
-            onPress={() => navigation.navigate('Timer', { sessionType: 'complete' })}
-            style={styles.cardButton}
-          />
         </Card>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -97,7 +95,5 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginBottom: spacing.sm
   },
-  cardButton: {
-    width: '100%'
-  }
+  
 });

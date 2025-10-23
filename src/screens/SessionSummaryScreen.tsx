@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@navigation/types';
@@ -25,7 +25,10 @@ export default function SessionSummaryScreen() {
   const lines = useMemo(() => getSessionSummaryLines(sessionType, t), [sessionType, t]);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + spacing.lg }] }>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={[styles.container, { paddingTop: insets.top + spacing.lg }]}
+    >
       <Text style={styles.title}>{t('app.title')}</Text>
       <SessionImage sessionType={sessionType} />
       <Card style={styles.card}>
@@ -40,13 +43,13 @@ export default function SessionSummaryScreen() {
           onPress={() => navigation.navigate('Timer', { sessionType })}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: colors.background,
     alignItems: 'center',
     paddingHorizontal: spacing.xl

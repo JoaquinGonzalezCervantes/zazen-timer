@@ -1,14 +1,30 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import { View, StyleSheet, ViewStyle, StyleProp, Pressable, GestureResponderEvent, PressableStateCallbackType } from 'react-native';
 import colors from '@theme/colors';
 import { spacing } from '@theme/spacing';
 
 interface CardProps {
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  onPress?: (event: GestureResponderEvent) => void;
 }
 
-export default function Card({ children, style }: CardProps) {
+export default function Card({ children, style, onPress }: CardProps) {
+  if (onPress) {
+    return (
+      <Pressable
+        onPress={onPress}
+        style={(state: PressableStateCallbackType) => [
+          styles.card,
+          state.pressed && styles.pressed,
+          style
+        ]}
+      >
+        {children}
+      </Pressable>
+    );
+  }
+
   return <View style={[styles.card, style]}>{children}</View>;
 }
 
@@ -25,5 +41,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     shadowRadius: 10,
     elevation: 3
+  },
+  pressed: {
+    opacity: 0.95,
+    transform: [{ scale: 0.98 }]
   }
 });
