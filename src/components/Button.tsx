@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, Text, View, StyleSheet, GestureResponderEvent, ViewStyle, PressableStateCallbackType } from 'react-native';
 import colors from '@theme/colors';
 import { spacing } from '@theme/spacing';
+import { typography } from '@theme/typography';
 
 type Variant = 'primary' | 'secondary';
 
@@ -11,9 +12,10 @@ interface ButtonProps {
   variant?: Variant;
   style?: ViewStyle;
   left?: React.ReactNode;
+  subtitle?: string;
 }
 
-export default function Button({ title, onPress, variant = 'primary', style, left }: ButtonProps) {
+export default function Button({ title, subtitle, onPress, variant = 'primary', style, left }: ButtonProps) {
   return (
     <Pressable onPress={onPress} style={(state: PressableStateCallbackType) => [
       styles.base,
@@ -23,7 +25,12 @@ export default function Button({ title, onPress, variant = 'primary', style, lef
     ]}>
       <View style={styles.content}>
         {left && <View style={styles.left}>{left}</View>}
-        <Text style={[styles.text, variant === 'secondary' && styles.textSecondary]}>{title}</Text>
+  <View style={[styles.textContainer, subtitle ? styles.textStack : undefined]}>
+          <Text style={[variant === 'secondary' ? styles.titleSecondary : styles.title]}>{title}</Text>
+          {subtitle ? (
+            <Text style={styles.subtitle}>{subtitle}</Text>
+          ) : null}
+        </View>
       </View>
     </Pressable>
   );
@@ -62,12 +69,22 @@ const styles = StyleSheet.create({
   left: {
     marginRight: spacing.md
   },
-  text: {
-    color: '#0B1220',
-    fontSize: 18,
-    fontWeight: '700'
+  textContainer: {
+    flexShrink: 1
   },
-  textSecondary: {
-    color: '#E5E7EB'
+  textStack: {
+    flexDirection: 'column'
+  },
+  title: {
+    ...typography.button,
+    color: colors.textOnPrimary
+  },
+  titleSecondary: {
+    ...typography.button,
+    color: colors.textPrimary
+  },
+  subtitle: {
+    ...typography.subtitle,
+    color: colors.textSecondary
   }
 });

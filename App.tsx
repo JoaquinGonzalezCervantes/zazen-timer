@@ -3,12 +3,13 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import './src/localization/i18n';
 import AppNavigator from './src/navigation/AppNavigator';
+import colors from '@theme/colors';
 
 const navTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: '#0B1220' // matches dark navy background theme
+    background: colors.background // align with app theme background
   }
 };
 

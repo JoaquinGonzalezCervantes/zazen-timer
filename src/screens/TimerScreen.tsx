@@ -4,6 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@navigation/types';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import colors from '@theme/colors';
 import { spacing } from '@theme/spacing';
 import { typography } from '@theme/typography';
@@ -16,7 +17,10 @@ export default function TimerScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const { t } = useTranslation();
-  const sessionType = route.params?.sessionType as 'zazen' | 'complete';
+  const insets = useSafeAreaInsets();
+  // Guard against missing or invalid sessionType
+  const paramType = route.params?.sessionType;
+  const sessionType: 'zazen' | 'complete' = paramType === 'complete' ? 'complete' : 'zazen';
   const { currentPeriod, timeDisplay, stop } = useTimer(sessionType);
 
   useEffect(() => {
@@ -29,10 +33,17 @@ export default function TimerScreen() {
   const periodLabel = t(`periods.${currentPeriod.type}`);
   const unitLabel = t(timeDisplay.unitKey);
 
+  // Map current period to the appropriate image mode
+  const periodMode = currentPeriod.type === 'preparation'
+    ? 'preparation'
+    : currentPeriod.type === 'kinhin'
+      ? 'kinhin'
+      : 'zazen';
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + spacing.lg }] }>
       <Text style={styles.title}>{t('app.title')}</Text>
-      <SessionImage periodType={currentPeriod.type === 'kinhin' ? 'kinhin' : 'zazen'} />
+      <SessionImage periodType={periodMode} />
       <Text style={styles.period}>{periodLabel}</Text>
       <Text style={styles.timer}>{`${timeDisplay.value} ${unitLabel}`}</Text>
     </View>
@@ -44,7 +55,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     alignItems: 'center',
-    paddingTop: spacing['2xl'],
     paddingHorizontal: spacing.xl
   },
   title: {

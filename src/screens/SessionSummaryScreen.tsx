@@ -4,12 +4,14 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@navigation/types';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Button from '@components/Button';
 import Card from '@components/Card';
 import SessionImage from '@components/SessionImage';
 import colors from '@theme/colors';
 import { spacing } from '@theme/spacing';
 import { typography } from '@theme/typography';
+import { getSessionSummaryLines } from '../utils/session';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'SessionSummary'>;
 
@@ -17,17 +19,13 @@ export default function SessionSummaryScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<any>();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const sessionType = route.params?.sessionType as 'zazen' | 'complete';
 
-  const lines = useMemo(() => {
-    if (sessionType === 'zazen') {
-      return [t('summary.zazen30')];
-    }
-    return [t('summary.zazen30'), t('summary.kinhin5'), t('summary.zazen30')];
-  }, [sessionType, t]);
+  const lines = useMemo(() => getSessionSummaryLines(sessionType, t), [sessionType, t]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + spacing.lg }] }>
       <Text style={styles.title}>{t('app.title')}</Text>
       <SessionImage sessionType={sessionType} />
       <Card style={styles.card}>
@@ -36,7 +34,7 @@ export default function SessionSummaryScreen() {
         ))}
       </Card>
 
-      <View style={styles.bottom}>
+      <View style={[styles.bottom, { marginBottom: insets.bottom + spacing.lg }]}>
         <Button
           title={t('buttons.start')}
           onPress={() => navigation.navigate('Timer', { sessionType })}
@@ -51,7 +49,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     alignItems: 'center',
-    paddingTop: spacing['2xl'],
     paddingHorizontal: spacing.xl
   },
   title: {

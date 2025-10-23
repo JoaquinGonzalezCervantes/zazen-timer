@@ -28,9 +28,9 @@ export default function SessionImage(props: Props) {
 
 const styles = StyleSheet.create({
   circle: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center'
   },
